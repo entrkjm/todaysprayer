@@ -1,103 +1,107 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { PrayerFeed } from '../components/prayer/PrayerFeed';
+import { PrayerForm } from '../components/prayer/PrayerForm';
+
+interface Prayer {
+  id: string;
+  content: string;
+  author: {
+    name: string;
+    isAnonymous: boolean;
+  };
+  createdAt: Date;
+  likes: number;
+  isBookmarked?: boolean;
+}
+
+// 샘플 데이터
+const initialPrayers: Prayer[] = [
+  {
+    id: '1',
+    content: '오늘 하루도 감사합니다. 가족들의 건강과 평안을 위해 기도합니다.',
+    author: {
+      name: '1234',
+      isAnonymous: true,
+    },
+    createdAt: new Date(),
+    likes: 5,
+    isBookmarked: false,
+  },
+  {
+    id: '2',
+    content: '내일 있을 중요한 회의를 위해 기도합니다. 하나님의 지혜와 은혜가 함께하시길 바랍니다.',
+    author: {
+      name: '홍길동',
+      isAnonymous: false,
+    },
+    createdAt: new Date(Date.now() - 3600000),
+    likes: 3,
+    isBookmarked: true,
+  },
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [prayers, setPrayers] = useState<Prayer[]>(initialPrayers);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  const handleSubmit = (content: string, isAnonymous: boolean) => {
+    const newPrayer: Prayer = {
+      id: Date.now().toString(),
+      content,
+      author: {
+        name: isAnonymous ? Math.floor(Math.random() * 10000).toString() : '홍길동', // 임시로 고정된 이름 사용
+        isAnonymous,
+      },
+      createdAt: new Date(),
+      likes: 0,
+      isBookmarked: false,
+    };
+
+    setPrayers((prev) => [newPrayer, ...prev]);
+  };
+
+  const handleLike = (id: string) => {
+    setPrayers((prev) =>
+      prev.map((prayer) =>
+        prayer.id === id
+          ? { ...prayer, likes: prayer.likes + 1 }
+          : prayer
+      )
+    );
+  };
+
+  const handleComment = (id: string) => {
+    console.log('Comment on prayer:', id);
+  };
+
+  const handleShare = (id: string) => {
+    console.log('Share prayer:', id);
+  };
+
+  const handleBookmark = (id: string) => {
+    setPrayers((prev) =>
+      prev.map((prayer) =>
+        prayer.id === id
+          ? { ...prayer, isBookmarked: !prayer.isBookmarked }
+          : prayer
+      )
+    );
+  };
+
+  return (
+    <main className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">모두의 기도</h1>
+        <PrayerForm onSubmit={handleSubmit} />
+        <PrayerFeed
+          prayers={prayers}
+          onLike={handleLike}
+          onComment={handleComment}
+          onShare={handleShare}
+          onBookmark={handleBookmark}
+        />
+      </div>
+    </main>
   );
 }
