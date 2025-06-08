@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Today's Prayer 프로젝트 작업 현황
 
-## Getting Started
+## 1. 현재 구현된 기능
 
-First, run the development server:
+### 1.1 기본 UI 구조
+- 메인 페이지 레이아웃
+- 기도문 피드 컴포넌트
+- 기도문 작성 폼
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 1.2 컴포넌트 구조
+```
+src/
+  ├── app/
+  │   └── page.tsx           # 메인 페이지
+  ├── components/
+  │   └── prayer/
+  │       ├── PrayerForm.tsx    # 기도문 작성 폼
+  │       ├── PrayerPost.tsx    # 개별 기도문 표시
+  │       └── PrayerFeed.tsx    # 기도문 피드
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1.3 구현된 기능
+- 기도문 작성 (익명/실명)
+- 기도문 목록 표시
+- 좋아요 기능
+- 북마크 기능
+- 기본적인 상태 관리
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 2. 다음 구현할 기능
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2.1 댓글 기능
+- 댓글 작성 폼
+- 댓글 목록 표시
+- 대댓글 기능
 
-## Learn More
+### 2.2 사용자 인증
+- 로그인/회원가입
+- 사용자 프로필
+- 실제 사용자 이름 사용
 
-To learn more about Next.js, take a look at the following resources:
+### 2.3 데이터 영속성
+- API 연동
+- 데이터베이스 저장
+- 페이지 새로고침 시 데이터 유지
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 3. 현재 코드 상태
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3.1 주요 컴포넌트
+- `PrayerForm`: 기도문 작성 폼
+- `PrayerPost`: 개별 기도문 표시
+- `PrayerFeed`: 기도문 피드
 
-## Deploy on Vercel
+### 3.2 상태 관리
+- React의 `useState` 훅 사용
+- 부모-자식 컴포넌트 간 props 전달
+- 이벤트 핸들링 구현
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 4. 다음 작업 시작점
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. 댓글 기능 구현
+   - `CommentForm` 컴포넌트 생성
+   - `CommentList` 컴포넌트 생성
+   - 댓글 상태 관리 구현
+
+2. 사용자 인증 구현
+   - 인증 관련 컴포넌트 생성
+   - 인증 상태 관리
+   - 보호된 라우트 구현
+
+3. API 연동
+   - API 클라이언트 설정
+   - 데이터 페칭 로직 구현
+   - 에러 처리
+
+## 5. 기술 스택
+
+- Next.js 14
+- React
+- TypeScript
+- Tailwind CSS
+
+## 6. 참고사항
+
+- 모든 컴포넌트는 'use client' 지시문 사용
+- TypeScript 인터페이스로 타입 안정성 확보
+- Tailwind CSS로 스타일링
+- 컴포넌트 간 단방향 데이터 흐름 유지 
