@@ -4,6 +4,17 @@ import { useState } from 'react';
 import { PrayerFeed } from '../components/prayer/PrayerFeed';
 import { PrayerForm } from '../components/prayer/PrayerForm';
 
+interface Comment {
+  id: string;
+  content: string;
+  author: {
+    name: string;
+    isAnonymous: boolean;
+  };
+  createdAt: Date;
+  likes: number;
+}
+
 interface Prayer {
   id: string;
   content: string;
@@ -13,6 +24,7 @@ interface Prayer {
   };
   createdAt: Date;
   likes: number;
+  comments: Comment[];
   isBookmarked?: boolean;
 }
 
@@ -27,6 +39,28 @@ const initialPrayers: Prayer[] = [
     },
     createdAt: new Date(),
     likes: 5,
+    comments: [
+      {
+        id: '1-1',
+        content: '함께 기도하겠습니다. 가족의 건강이 가장 중요하죠.',
+        author: {
+          name: '김철수',
+          isAnonymous: false,
+        },
+        createdAt: new Date(Date.now() - 1800000),
+        likes: 2,
+      },
+      {
+        id: '1-2',
+        content: '감사한 마음으로 기도합니다 🙏',
+        author: {
+          name: '5678',
+          isAnonymous: true,
+        },
+        createdAt: new Date(Date.now() - 900000),
+        likes: 1,
+      },
+    ],
     isBookmarked: false,
   },
   {
@@ -38,6 +72,7 @@ const initialPrayers: Prayer[] = [
     },
     createdAt: new Date(Date.now() - 3600000),
     likes: 3,
+    comments: [],
     isBookmarked: true,
   },
 ];
@@ -55,6 +90,7 @@ export default function Home() {
       },
       createdAt: new Date(),
       likes: 0,
+      comments: [],
       isBookmarked: false,
     };
 
@@ -71,8 +107,39 @@ export default function Home() {
     );
   };
 
-  const handleComment = (id: string) => {
-    console.log('Comment on prayer:', id);
+  const handleComment = (id: string, comment: { content: string; author: { name: string; isAnonymous: boolean } }) => {
+    const newComment: Comment = {
+      id: `${id}-${Date.now()}`,
+      content: comment.content,
+      author: comment.author,
+      createdAt: new Date(),
+      likes: 0,
+    };
+
+    setPrayers((prev) =>
+      prev.map((prayer) =>
+        prayer.id === id
+          ? { ...prayer, comments: [...prayer.comments, newComment] }
+          : prayer
+      )
+    );
+  };
+
+  const handleLikeComment = (prayerId: string, commentId: string) => {
+    setPrayers((prev) =>
+      prev.map((prayer) =>
+        prayer.id === prayerId
+          ? {
+              ...prayer,
+              comments: prayer.comments.map((comment) =>
+                comment.id === commentId
+                  ? { ...comment, likes: comment.likes + 1 }
+                  : comment
+              ),
+            }
+          : prayer
+      )
+    );
   };
 
   const handleShare = (id: string) => {
@@ -98,6 +165,7 @@ export default function Home() {
           prayers={prayers}
           onLike={handleLike}
           onComment={handleComment}
+          onLikeComment={handleLikeComment}
           onShare={handleShare}
           onBookmark={handleBookmark}
         />
